@@ -69,25 +69,25 @@ class Player(pygame.sprite.Sprite):
         distance_x = self.direction.x * self.speed * dt
 
 		# Calculate the new position
-        new_x = self.player_x + distance_x
+        new_x = self.pos.x + distance_x
 
         # Keep player from going too far right
         if 0 <= new_x <= SCREEN_WIDTH - self.rect.width:
-            self.player_x = new_x 
-            self.rect.centerx = self.player_x
+            self.pos.x = new_x 
+            self.rect.centerx = self.pos.x
 
         # Keep player from going too far left
         elif new_x < 0:
-            self.player_x = 0
-            self.rect.centerx = self.player_x
+            self.pos.x = 0
+            self.rect.centerx = self.pos.x
  
         # Move the player
         else:
-            self.player_x = SCREEN_WIDTH - self.rect.width
-            self.rect.centerx = self.player_x
+            self.pos.x = SCREEN_WIDTH - self.rect.width
+            self.rect.centerx = self.pos.x
 
         # Display the player
-        SCREEN.blit(self.image, (self.player_x, self.player_y))
+        SCREEN.blit(self.image, self.pos)
 
 
 

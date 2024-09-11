@@ -23,7 +23,7 @@ class Level:
         self.background = pygame.image.load("graphics/level/0.png")
 
         # Create enemy
-        self.enemy = Enemy(self.all_sprites, self.enemies)
+        self.enemy = Enemy(self.all_sprites, self.enemies, self.player)
 
     def run(self, dt):
         """ Main game loop """

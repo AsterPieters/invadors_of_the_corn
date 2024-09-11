@@ -22,7 +22,7 @@ class Bullet(pygame.sprite.Sprite):
     def update(self, dt):
         
         # Display bullet as long as its active
-        self.bullet_y -= self.player.speed / 100
+        self.bullet_y -= 100
 
         # Display the bullet 
         SCREEN.blit(self.image, (self.bullet_x, self.bullet_y))
