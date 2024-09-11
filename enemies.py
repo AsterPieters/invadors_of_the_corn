@@ -60,6 +60,8 @@ class Ufo(pygame.sprite.Sprite):
         self.pos = pygame.math.Vector2(self.rect.center)
         self.speed = 1
 
+
+
     def move(self, dt):
 
         # Drop the Ufo from the sky
@@ -77,12 +79,12 @@ class Ufo(pygame.sprite.Sprite):
         # Move the ufo to the player
         self.pos += direction * self.speed
 
-        # Display ufo
+        # Display ufo and rect
+        self.rect.x = self.pos.x
+        self.rect.y = self.pos.y
         SCREEN.blit(self.image, self.pos)
 
-        # Move the rect
-        #self.rect.y = self.pos.y
-        #self.rect.x = self.pos.x
+
 
     def update(self, dt):
 
