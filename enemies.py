@@ -4,6 +4,7 @@ import pygame
 from random import randint
 
 from settings import *
+from tools import random_coords
 
 class Enemy:
     """ Parent class for enemies """
@@ -40,25 +41,29 @@ class Ufo(pygame.sprite.Sprite):
         # Initialize sprites
         super().__init__()
 
-        # Initialize starting location
-        self.ufo_x = randint(0, SCREEN_WIDTH - 150)
-        self.ufo_y = 100
-
         # Initialize characteristics
         self.health = 100
 
         # Initialize bullet
         self.image = pygame.image.load("graphics/enemies/ufo/0.png")
         self.rect = self.image.get_rect()
-    
+
+        # Spawn ufo above the screen
+        self.ufo_x = random_coords(self.rect.width)
+        self.ufo_y = -100
+
     def update(self, dt):
+
+        # Drop the Ufo from the sky
+        if self.ufo_y < 100:
+            self.ufo_y += 1
 
         # Display ufo
         SCREEN.blit(self.image, (self.ufo_x, self.ufo_y))
 
         # Move the rect
-        self.rect.centery = self.ufo_y
-        self.rect.centerx = self.ufo_x
+        self.rect.y = self.ufo_y
+        self.rect.x = self.ufo_x
 
 
 

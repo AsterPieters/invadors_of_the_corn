@@ -19,6 +19,9 @@ class Level:
         self.player = Player(self.all_sprites, self.bullets)
         self.all_sprites.add(self.player)
 
+        # graphics
+        self.background = pygame.image.load("graphics/level/0.png")
+
         # Create enemy
         self.enemy = Enemy(self.all_sprites, self.enemies)
 
@@ -26,7 +29,7 @@ class Level:
         """ Main game loop """
 
         # Reset the screen
-        SCREEN.fill("deepskyblue1")
+        SCREEN.blit(self.background, (0,0))
 
         # Check user input
         self.player.get_user_input()

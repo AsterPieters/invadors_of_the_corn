@@ -18,7 +18,7 @@ class Player(pygame.sprite.Sprite):
         self.status = 'left_idle'
         self.frame_index = 0
         self.player_x = 600
-        self.player_y = 600
+        self.player_y = 560
 
         # Graphics
         self.import_graphics()
