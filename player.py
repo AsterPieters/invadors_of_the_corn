@@ -18,13 +18,13 @@ class Player(pygame.sprite.Sprite):
         self.status = 'left_idle'
         self.frame_index = 0
         self.player_x = 600
-        self.player_y = 560
+        self.player_y = 400
 
         # Graphics
         self.import_graphics()
         self.image = self.animations[self.status][int(self.frame_index)]
         self.rect = self.image.get_rect(center = ((SCREEN_WIDTH // 2), 600))
-
+    
         # Groups
         self.all_sprites = all_sprites
         self.bullets = bullets
@@ -74,17 +74,17 @@ class Player(pygame.sprite.Sprite):
         # Keep player from going too far right
         if 0 <= new_x <= SCREEN_WIDTH - self.rect.width:
             self.pos.x = new_x 
-            self.rect.centerx = self.pos.x
+            self.rect.x = self.pos.x
 
         # Keep player from going too far left
         elif new_x < 0:
             self.pos.x = 0
-            self.rect.centerx = self.pos.x
+            self.rect.x = self.pos.x
  
         # Move the player
         else:
             self.pos.x = SCREEN_WIDTH - self.rect.width
-            self.rect.centerx = self.pos.x
+            self.rect.x = self.pos.x
 
         # Display the player
         SCREEN.blit(self.image, self.pos)
@@ -154,6 +154,12 @@ class Player(pygame.sprite.Sprite):
             # Add bullet object to the sprite groups
             self.bullets.add(bullet)
             self.all_sprites.add(bullet)
+
+
+
+    def die(self):
+        """ Handle player death """
+        print("Player died")
 
 
 

@@ -1,19 +1,22 @@
 # enemies.py
 
 import pygame
+import time
 from random import randint
 
 from settings import *
+from bullet import Laser
 from tools import random_coords
 
 class Enemy:
     """ Parent class for enemies """
     
-    def __init__(self, all_sprites, enemies, player):
+    def __init__(self, all_sprites, enemies, player, lasers):
 
         # Initialize groups
         self.all_sprites = all_sprites
         self.enemies = enemies
+        self.lasers = lasers
         
         self.player = player
         
@@ -21,12 +24,16 @@ class Enemy:
         self.spawn_enemies()
 
 
+
     def spawn_enemies(self):
-        
-        ufo = Ufo(self.player) 
+
+        #TODO: make multiple enemies with levels
+        ufo = Ufo(self.player, self.all_sprites, self.lasers) 
         self.enemies.add(ufo)
         self.all_sprites.add(ufo)
-    
+
+
+
     def update_enemies(self, bullets):
         
         # Kill enemy if hit by a bullet
@@ -34,11 +41,17 @@ class Enemy:
             self.spawn_enemies()
             print("[INFO] Enemy was hit!")
         
+        # Kill player if hit by a laser
+        if pygame.sprite.spritecollide(self.player, self.lasers, True):
+            print("[INFO] Player was hit!")
+            self.player.die()
+
+
 
 class Ufo(pygame.sprite.Sprite):
     """ A ufo that shoots lazers"""
 
-    def __init__(self, player):
+    def __init__(self, player, all_sprites, lasers):
        
         # Initialize sprites
         super().__init__()
@@ -46,7 +59,11 @@ class Ufo(pygame.sprite.Sprite):
         # Set player
         self.player = player
 
+        self.all_sprites = all_sprites
+        self.lasers = lasers
+
         # Initialize characteristics
+        self.last_ts = time.time()
         self.health = 100
 
         # Load image
@@ -59,14 +76,11 @@ class Ufo(pygame.sprite.Sprite):
         # Movement
         self.pos = pygame.math.Vector2(self.rect.center)
         self.speed = 1
+        self.flying_up = False
 
 
 
     def move(self, dt):
-
-        # Drop the Ufo from the sky
-        if self.pos.y < 100:
-            self.pos.y += 1
 
         # Get the direction of the ufo
         direction = self.player.pos - self.pos
@@ -76,8 +90,22 @@ class Ufo(pygame.sprite.Sprite):
         if direction.length() != 0:
             direction = direction.normalize()
 
-        # Move the ufo to the player
-        self.pos += direction * self.speed
+        # Send ufo back up when too low 
+        if self.pos.y >= 300:
+            self.flying_up = True
+
+        # Send ufo down when too high up
+        elif self.pos.y <= 50:
+            self.flying_up = False
+
+        # Go up but follow player
+        if self.flying_up:
+            self.pos.x += direction[0] * self.speed
+            self.pos.y -= direction[1] * self.speed
+        
+        # Go down but follow player
+        else:
+            self.pos += direction * self.speed
 
         # Display ufo and rect
         self.rect.x = self.pos.x
@@ -86,9 +114,32 @@ class Ufo(pygame.sprite.Sprite):
 
 
 
+    def shoot_laser(self): 
+       
+        # Cooldown function
+        # Get current timestamp
+        current_ts = time.time()
+        
+        # Compare last timestamp plus cooldown to current timestamp
+        if self.last_ts + 2 < current_ts:
+
+            # Get the new timestamp and shoot
+            self.last_ts = time.time()
+
+            # Create bullet object
+            laser = Laser(self)
+
+            # Add bullet object to the sprite groups
+            self.lasers.add(laser)
+            self.all_sprites.add(laser)
+
+
+
     def update(self, dt):
 
         self.move(dt)
+        self.shoot_laser()
+
 
 
 class Cow(pygame.sprite.Sprite):
