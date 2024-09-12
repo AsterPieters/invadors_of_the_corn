@@ -1,7 +1,10 @@
 # tools.py
 
 from os import walk
+from random import randint
 import pygame
+
+from settings import *
 
 
 def import_folder(path):
@@ -22,4 +25,16 @@ def import_folder(path):
             list.append(image_surf)
 
     return list
+
+
+
+def random_coords(sprite_width):
+    """ Generate random coordinates """
+
+    # Make sure its in between screen boundaries 
+    x_coords = randint(0, SCREEN_WIDTH - sprite_width)
+    
+    return x_coords
+
+
 
