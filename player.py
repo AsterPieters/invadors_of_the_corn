@@ -19,11 +19,12 @@ class Player(pygame.sprite.Sprite):
         self.frame_index = 0
         self.player_x = 600
         self.player_y = 400
+        self.player_alive = True
 
         # Graphics
         self.import_graphics()
         self.image = self.animations[self.status][int(self.frame_index)]
-        self.rect = self.image.get_rect(center = ((SCREEN_WIDTH // 2), 600))
+        self.rect = self.image.get_rect(center = ((SCREEN_WIDTH // 2), 560))
     
         # Groups
         self.all_sprites = all_sprites
@@ -113,7 +114,7 @@ class Player(pygame.sprite.Sprite):
             self.status = self.status.split('_')[0] + '_idle'
 
         # Shoot
-        if keys[pygame.K_SPACE]:    
+        if keys[pygame.K_SPACE]:
             self.shoot_shotgun()
 
 
@@ -123,7 +124,9 @@ class Player(pygame.sprite.Sprite):
 
         self.animations = {
                 'left': [],
+                'left_shoot': [],
                 'right': [],
+                'right_shoot': [],
                 'left_idle': [],
                 'right_idle': []
                 }
@@ -143,10 +146,12 @@ class Player(pygame.sprite.Sprite):
         current_ts = time.time()
         
         # Compare last timestamp plus cooldown to current timestamp
-        if self.last_ts + 1 < current_ts:
+        if self.last_ts + 1 < current_ts and self.player_alive:
+            
+            self.status = self.status.split('_')[0] + '_shoot'
 
-            # Get the new timestamp and shoot
-            self.last_ts = time.time()
+            
+
 
             # Create bullet object
             bullet = Bullet(self)
@@ -156,18 +161,23 @@ class Player(pygame.sprite.Sprite):
             self.all_sprites.add(bullet)
 
 
+            # Get the new timestamp and shoot
+            self.last_ts = time.time()
 
-    def die(self):
+    def die(self, stats):
         """ Handle player death """
-        print("Player died")
+        self.all_sprites.remove(self)
+        print("[INFO]Player died")
+        self.player_alive = False
+        stats.gameover = True
 
+        
 
 
     def update(self, dt):
         """ Call all important fuctions """
 
         self.get_user_input()
-        self.move(dt)
         self.animate(dt)
-
+        self.move(dt)
             

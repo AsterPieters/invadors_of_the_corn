@@ -13,6 +13,7 @@ class Bullet(pygame.sprite.Sprite):
         # Initialize bullet
         self.image = pygame.image.load("graphics/shotgun/bullet/0.png")
         self.rect = self.image.get_rect()
+        self.damage = 20
 
         self.player = player
         

@@ -6,6 +6,7 @@ from pygame.sprite import Group
 from settings import *
 from player import Player
 from enemies import Enemy
+from stats import Stats
 
 class Level:
     def __init__(self):
@@ -16,6 +17,9 @@ class Level:
         self.enemies = Group()
         self.lasers = Group()
 
+        # Create game state
+        self.stats = Stats()
+        
         # Create player
         self.player = Player(self.all_sprites, self.bullets)
         self.all_sprites.add(self.player)
@@ -24,7 +28,8 @@ class Level:
         self.background = pygame.image.load("graphics/level/0.png")
 
         # Create enemy
-        self.enemy = Enemy(self.all_sprites, self.enemies, self.player, self.lasers)
+        self.enemy = Enemy(self.all_sprites, self.enemies, self.player, self.lasers, self.stats)
+
 
     def run(self, dt):
         """ Main game loop """
@@ -40,6 +45,8 @@ class Level:
     
         # Update enemies
         self.enemy.update_enemies(self.bullets)
+
+        self.stats.display_stats()
 
         # Update the display
         pygame.display.update()
